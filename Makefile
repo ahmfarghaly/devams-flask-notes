@@ -1,6 +1,6 @@
 setup:
-	python -m venv ~/.flask
-	~/.flask/Scripts/activate
+	python3 -m venv ~/.flask
+	source ~/.flask/bin/activate
 
 install:
 	python3 -m pip install --upgrade pip &&\
