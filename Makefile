@@ -1,9 +1,9 @@
 setup:
-	python -m venv flask
-	flask/Scripts/activate
+	python -m venv ~/.flask
+	~/.flask/Scripts/activate
 
 install:
-	python -m pip install --upgrade pip &&\
+	python3 -m pip install --upgrade pip &&\
 		pip install -r requirements.txt
 
 test:
@@ -17,6 +17,7 @@ lint:
 	# hadolint Dockerfile
 	# This is a linter for Python source code linter: https://www.pylint.org/
 	# This should be run from inside a virtualenv
+	tidy -q -e *.html
 	pylint --disable=R,C,W1203,W1202 app.py
 
 all: install lint test
