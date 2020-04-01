@@ -2,15 +2,19 @@ pipeline {
     agent any
 
     stages {
-        stage('Lint') {
+        stage('setup') {
             steps {
-                echo 'Linting..'
-                sh 'make lint'
+                sh 'make setup'
             }
         }
         stage('Build') {
             steps {
-                echo 'Building..'
+                sh 'make install'
+            }
+        }
+        stage('Lint') {
+            steps {
+                sh 'make lint'
             }
         }
         stage('Test') {
