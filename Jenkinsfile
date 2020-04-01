@@ -6,8 +6,7 @@ pipeline {
             steps {
                 echo 'Linting..'
                 steps {
-                    sh 'tidy -q -e *.html'
-                    sh 'pylint --disable=R,C,W1203,W1202 app.py'
+                    sh 'make lint'
                 }
             }
         }
