@@ -5,9 +5,7 @@ pipeline {
         stage('Lint') {
             steps {
                 echo 'Linting..'
-                steps {
-                    sh 'make lint'
-                }
+                sh 'make lint'
             }
         }
         stage('Build') {
