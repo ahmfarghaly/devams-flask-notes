@@ -1,3 +1,9 @@
+environment {
+    registry = "asfora/notes-webapp"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+}
+
 pipeline {
     agent any
 
@@ -7,24 +13,35 @@ pipeline {
                 sh 'make setup'
             }
         }
-        stage('Build') {
+        stage('install') {
             steps {
                 sh 'make install'
             }
         }
-        stage('Lint') {
+        stage('lint') {
             steps {
                 sh 'make lint'
             }
         }
-        stage('Test') {
+        stage('test') {
             steps {
                 echo 'Testing..'
             }
         }
-        stage('Deploy') {
+        stage('build-docker') {
             steps {
-                echo 'Deploying....'
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+        stage('deploy-dockerhub') {
+            steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }   
+                }
             }
         }
     }
