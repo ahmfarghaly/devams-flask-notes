@@ -1,10 +1,10 @@
-environment {
-    registry = "asfora/notes-webapp"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
-}
-
 pipeline {
+    environment {
+        registry = "asfora/notes-webapp"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+
     agent any
 
     stages {
@@ -44,5 +44,10 @@ pipeline {
                 }
             }
         }
+        stage('Remove Unused docker image') {
+            steps{
+                sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+        }   
     }
 }
