@@ -1,10 +1,8 @@
-dockerid=asfora
-dockerpath=$dockerid/notes-webapp
 setup:
 	python3 -m venv ~/.flask
-	. ~/.flask/bin/activate
 
 install:
+	. ~/.flask/bin/activate; \
 	python3 -m pip install --upgrade pip &&\
 		pip install -r requirements.txt
 
@@ -23,7 +21,7 @@ lint:
 	pylint --disable=R,C,W1203,W1202,W0611 app.py
 
 build:
-	docker build .
+	docker build --tag=asfora/notes-webapp .
 
 publish:
 	echo "Docker ID and Image: $dockerpath"
@@ -32,4 +30,4 @@ publish:
 
 	docker push $dockerpath
 
-all: setup lint install test
+all: setup install lint test build
