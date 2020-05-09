@@ -31,7 +31,7 @@ pipeline {
         stage('build-docker') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build registry
                 }
             }
         }
@@ -46,8 +46,39 @@ pipeline {
         }
         stage('Remove Unused docker image') {
             steps{
-                sh "docker rmi $registry:$BUILD_NUMBER"
+                sh "docker rmi $registry"
             }
-        }   
+        }
+        /**
+        stage('set current kubectl context') {
+            steps{
+                sh 'kubectl config use-context '
+            }
+        }
+        stage('Deploy blue container') {
+            when {
+                expression { env.BRANCH_NAME == 'blue' }
+            }
+            steps{
+                sh 'kubectl apply -f ./blue-controller.json'
+            }
+        }
+        stage('Deploy green container') {
+            when {
+                expression { env.BRANCH_NAME == 'green' }
+            }
+            steps{
+                sh 'kubectl apply -f ./green-controller.json'
+            }
+        }
+        stage('Create Blue-Green service') {
+            when {
+                expression { env.BRANCH_NAME != 'master' }
+            }
+            steps{
+                sh 'kubectl apply -f ./blue-green-service.json'
+            }
+        }
+        */   
     }
 }
