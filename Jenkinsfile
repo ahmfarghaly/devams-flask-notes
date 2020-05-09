@@ -31,7 +31,7 @@ pipeline {
         stage('build-docker') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":blue"
+                    dockerImage = docker.build registry + ":green"
                 }
             }
         }
