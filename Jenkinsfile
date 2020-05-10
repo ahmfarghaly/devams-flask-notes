@@ -2,6 +2,7 @@ pipeline {
     environment {
         registry = "asfora/notes-webapp"
         registryCredential = 'dockerhub'
+        versionName = "blue"
         dockerImage = ''
     }
 
@@ -31,7 +32,7 @@ pipeline {
         stage('build-docker') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":blue"
+                    dockerImage = docker.build registry + ":$versionName"
                 }
             }
         }
@@ -46,7 +47,7 @@ pipeline {
         }
         stage('Remove Unused docker image') {
             steps{
-                sh "docker rmi $registry"
+                sh "docker rmi $registry"+ ":$versionName"
             }
         }
         /**

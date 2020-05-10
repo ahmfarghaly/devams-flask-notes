@@ -25,7 +25,7 @@
                    "image":"asfora/notes-webapp:blue",
                    "ports":[
                       {
-                         "name":"Flask-App",
+                         "name":"http-server",
                          "containerPort":80
                       }
                    ]
