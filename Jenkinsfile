@@ -2,6 +2,7 @@ pipeline {
     environment {
         registry = "asfora/notes-webapp"
         registryCredential = 'dockerhub'
+        versionName = "latest"
         dockerImage = ''
     }
 
@@ -31,7 +32,7 @@ pipeline {
         stage('build-docker') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build registry + ":$versionName"
                 }
             }
         }
@@ -46,8 +47,47 @@ pipeline {
         }
         stage('Remove Unused docker image') {
             steps{
-                sh "docker rmi $registry:$BUILD_NUMBER"
+                sh "docker rmi $registry" + ":$versionName"
             }
         }   
+        /*
+        stage('Create Cluster') {
+              when {
+                expression { env.BRANCH_NAME != 'master' }
+              }
+
+              steps {
+                milestone(1)
+                input 'Create EKS Cluster?'
+                milestone(2)
+              }
+        }
+        stage('Create Cluster') {
+            steps {
+                withAWS(region:'us-west-2',credentials:'aws') {
+                    sh 'echo "Create the create cluster "'
+                    sh '''
+                       eksctl create cluster \
+                       --name CapstoneCluster \
+                       --region us-west-2 \
+                       --nodegroup-name standard-workers \
+                       --node-type t3.medium \
+                       --node-ami auto \
+                       --nodes 2 \
+                       --nodes-min 1 \
+                       --nodes-max 4
+                    '''
+                }
+            }
+        }
+        stage('Create a kubectl configuration file') {
+            steps{
+                withAWS(region:'us-west-2',credentials:'aws') {
+                    sh 'echo "Create a kubectl configuration file"'
+                    sh 'aws eks --region us-west-2 update-kubeconfig --name CapstoneCluster'
+                }
+            }
+        }
+        */
     }
 }
