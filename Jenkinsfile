@@ -47,13 +47,15 @@ pipeline {
         }
         stage('Remove Unused docker image') {
             steps{
-                sh "docker rmi $registry" + ":$versionName"
+                sh "docker rmi $registry"+ ":$versionName"
             }
         }
-        /**
         stage('set current kubectl context') {
             steps{
-                sh 'kubectl config use-context '
+                withAWS(region:'us-west-2',credentials:'awsdev') {
+                    sh 'aws eks --region us-west-2 update-kubeconfig --name DevamsK8sCluster'
+                    sh 'kubectl config use-context arn:aws:eks:us-west-2:736637672331:cluster/DevamsK8sCluster'
+                }
             }
         }
         stage('Deploy blue container') {
@@ -61,7 +63,9 @@ pipeline {
                 expression { env.BRANCH_NAME == 'blue' }
             }
             steps{
-                sh 'kubectl apply -f ./blue-controller.json'
+                withAWS(region:'us-west-2',credentials:'awsdev') {
+                    sh 'kubectl apply -f ./blue-controller.json'
+                }
             }
         }
         stage('Deploy green container') {
@@ -69,7 +73,9 @@ pipeline {
                 expression { env.BRANCH_NAME == 'green' }
             }
             steps{
-                sh 'kubectl apply -f ./green-controller.json'
+                withAWS(region:'us-west-2',credentials:'awsdev') {
+                    sh 'kubectl apply -f ./green-controller.json'
+                }
             }
         }
         stage('Create Blue-Green service') {
@@ -77,9 +83,11 @@ pipeline {
                 expression { env.BRANCH_NAME != 'master' }
             }
             steps{
-                sh 'kubectl apply -f ./blue-green-service.json'
+                withAWS(region:'us-west-2',credentials:'awsdev') {
+                    sh 'kubectl apply -f ./blue-green-service.json'
+                    sh 'kubectl describe service bluegreenlb'
+                }
             }
-        }
-        */   
+        }  
     }
 }
