@@ -52,7 +52,10 @@ pipeline {
         }
         stage('set current kubectl context') {
             steps{
-                sh 'kubectl config use-context arn:aws:eks:us-west-2:736637672331:cluster/DevamsK8sCluster'
+                withAWS(region:'us-west-2',credentials:'aws') {
+                    sh 'aws eks --region us-west-2 update-kubeconfig --name DevamsK8sCluster'
+                    sh 'kubectl config use-context arn:aws:eks:us-west-2:736637672331:cluster/DevamsK8sCluster'
+                }
             }
         }
         stage('Deploy blue container') {
