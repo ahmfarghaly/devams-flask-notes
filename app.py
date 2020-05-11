@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/home')
-def hello()::
+def hello():
     name = request.args.get("name", "World")
     return render_template('home.html',name=name,host=socket.gethostname())
 
