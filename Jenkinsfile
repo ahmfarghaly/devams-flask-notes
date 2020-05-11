@@ -52,7 +52,7 @@ pipeline {
         }
         stage('set current kubectl context') {
             steps{
-                withAWS(region:'us-west-2',credentials:'aws') {
+                withAWS(region:'us-west-2',credentials:'awsdev') {
                     sh 'aws eks --region us-west-2 update-kubeconfig --name DevamsK8sCluster'
                     sh 'kubectl config use-context arn:aws:eks:us-west-2:736637672331:cluster/DevamsK8sCluster'
                 }
@@ -63,7 +63,7 @@ pipeline {
                 expression { env.BRANCH_NAME == 'blue' }
             }
             steps{
-                withAWS(region:'us-west-2',credentials:'aws') {
+                withAWS(region:'us-west-2',credentials:'awsdev') {
                     sh 'kubectl apply -f ./blue-controller.json'
                 }
             }
@@ -73,7 +73,7 @@ pipeline {
                 expression { env.BRANCH_NAME == 'green' }
             }
             steps{
-                withAWS(region:'us-west-2',credentials:'aws') {
+                withAWS(region:'us-west-2',credentials:'awsdev') {
                     sh 'kubectl apply -f ./green-controller.json'
                 }
             }
@@ -83,7 +83,7 @@ pipeline {
                 expression { env.BRANCH_NAME != 'master' }
             }
             steps{
-                withAWS(region:'us-west-2',credentials:'aws') {
+                withAWS(region:'us-west-2',credentials:'awsdev') {
                     sh 'kubectl apply -f ./blue-green-service.json'
                     sh 'kubectl describe service bluegreenlb'
                 }
