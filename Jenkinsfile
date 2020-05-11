@@ -71,7 +71,7 @@ pipeline {
                        --name CapstoneCluster \
                        --region us-west-2 \
                        --nodegroup-name standard-workers \
-                       --node-type t3.medium \
+                       --node-type t3.micro \
                        --node-ami auto \
                        --nodes 2 \
                        --nodes-min 1 \
